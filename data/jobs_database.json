@@ -1,0 +1,198 @@
+[
+    {
+        "id": "19f9871d1afeda19",
+        "date": "2026-07-25",
+        "company": "Nagomi Security",
+        "role": "Fullstack Engineer (Frontend-focused)",
+        "status": "Active"
+    },
+    {
+        "id": "19f95d76729adf99",
+        "date": "2026-07-24",
+        "company": "LEAP Legal Software",
+        "role": "Global Web Developer",
+        "status": "Active"
+    },
+    {
+        "id": "19f83af1b1fe9e8f",
+        "date": "2026-07-21",
+        "company": "\"Hostaway",
+        "role": "Senior Frontend Engineer - 100% Remote - EMEA\"",
+        "status": "Active"
+    },
+    {
+        "id": "19f6a12fcd863da4",
+        "date": "2026-07-16",
+        "company": "\"Elena G\u00fcnther\"",
+        "role": "Senior Frontend Engineer (m/w/d)",
+        "status": "Active"
+    },
+    {
+        "id": "19f578ac7ccb2917",
+        "date": "2026-07-12",
+        "company": "HR System",
+        "role": "Front-End Developer (Vue",
+        "status": "Active"
+    },
+    {
+        "id": "19f5388b705d65bc",
+        "date": "2026-07-12",
+        "company": "Huzzle",
+        "role": "Frontend Engineer",
+        "status": "Active"
+    },
+    {
+        "id": "19f4b2ca0300a832",
+        "date": "2026-07-10",
+        "company": "Pleo",
+        "role": "Staff Frontend Engineer - Design Systems",
+        "status": "Active"
+    },
+    {
+        "id": "19f48ff2c1c9fbbe",
+        "date": "2026-07-09",
+        "company": "Natural Negative",
+        "role": "Full Stack Engineer",
+        "status": "Active"
+    },
+    {
+        "id": "19f4460fd987611e",
+        "date": "2026-07-09",
+        "company": "Jobgether Talent",
+        "role": "Applied Role",
+        "status": "Active"
+    },
+    {
+        "id": "19f43437c815adce",
+        "date": "2026-07-08",
+        "company": "Vanta",
+        "role": "Principal Software Engineer, Platform",
+        "status": "Active"
+    },
+    {
+        "id": "19f410cb086c5366",
+        "date": "2026-07-08",
+        "company": "PostHog",
+        "role": "Applied Role",
+        "status": "Active"
+    },
+    {
+        "id": "19f3f3a9a81446a2",
+        "date": "2026-07-08",
+        "company": "Jobgether Talent",
+        "role": "Senior Frontend Engineer",
+        "status": "Active"
+    },
+    {
+        "id": "19f3e52669f538c1",
+        "date": "2026-07-07",
+        "company": "Stay Group",
+        "role": "Frontend Developer (Vue.js / Nuxt.js)",
+        "status": "Active"
+    },
+    {
+        "id": "19f3d248812ad3ea",
+        "date": "2026-07-07",
+        "company": "Accesa",
+        "role": "Senior Frontend Software Engineer with Vue",
+        "status": "Active"
+    },
+    {
+        "id": "19f3d0acf9eb92de",
+        "date": "2026-07-07",
+        "company": "Y Combinator",
+        "role": "Junction",
+        "status": "Active"
+    },
+    {
+        "id": "19f379a68abfcddf",
+        "date": "2026-07-06",
+        "company": "tem",
+        "role": "tem",
+        "status": "Active"
+    },
+    {
+        "id": "19f37229c95dbc08",
+        "date": "2026-07-06",
+        "company": "n8n",
+        "role": "Applied Role",
+        "status": "Active"
+    },
+    {
+        "id": "19f244c960163cad",
+        "date": "2026-07-02",
+        "company": "Proxify",
+        "role": "Network Member / Developer",
+        "status": "Active"
+    },
+    {
+        "id": "19f231cb74a80a98",
+        "date": "2026-07-02",
+        "company": "Equal Experts",
+        "role": "Applied Role",
+        "status": "Active"
+    },
+    {
+        "id": "19f223be6af558e4",
+        "date": "2026-07-02",
+        "company": "Reedsy",
+        "role": "Senior Frontend Engineer - Remote Europe",
+        "status": "Active"
+    },
+    {
+        "id": "19f22028d73aa14a",
+        "date": "2026-07-02",
+        "company": "Atticus",
+        "role": "Applied Role",
+        "status": "Active"
+    },
+    {
+        "id": "19f1fdc9cc763cad",
+        "date": "2026-07-01",
+        "company": "9fin Talent",
+        "role": "Applied Role",
+        "status": "Active"
+    },
+    {
+        "id": "19f1acb7e84d5a7c",
+        "date": "2026-07-01",
+        "company": "at ZOE",
+        "role": "Senior Full Stack Engineer (FE Focused)",
+        "status": "Active"
+    },
+    {
+        "id": "19f1aaa98737a150",
+        "date": "2026-06-30",
+        "company": "Paddle Talent",
+        "role": "Senior Frontend Engineer",
+        "status": "Active"
+    },
+    {
+        "id": "19f1a948ee76b311",
+        "date": "2026-06-30",
+        "company": "Inspired Thinking Group (ITG)",
+        "role": "Lead Frontend Developer",
+        "status": "Active"
+    },
+    {
+        "id": "19f1a8e8a47b2e94",
+        "date": "2026-06-30",
+        "company": "Paddle Talent",
+        "role": "Senior Frontend Engineer",
+        "status": "Active"
+    },
+    {
+        "id": "19f19ffce65aeb8a",
+        "date": "2026-06-30",
+        "company": "Proxify Careers",
+        "role": "Network Member / Developer",
+        "status": "Active"
+    },
+    {
+        "id": "1994dbc56ab05aba",
+        "date": "2025-09-15",
+        "company": "\"Atlassian @ icims\"",
+        "role": "Applied Role",
+        "status": "Archived"
+    }
+]

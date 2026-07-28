@@ -37,7 +37,7 @@ INTENT_SUBJECT_KEYWORDS = [
     "thank you for applying",
     "thanks for applying",
     "thank you for your application",
-    "thanks for your application"
+    "thanks for your application",
     "received your application",
     "your application",
     "application for",
@@ -59,7 +59,14 @@ BODY_REGEX_PATTERNS = [
     r"Thank you for applying to the\s+(.*?)\s+(?:position|role|job)",
     r"Thanks for applying to\s+(.*?)\s+-\s+Your",
     r"application for\s+(.*?)\s+has been received",
-    r"regarding your\s+(.*?)\s+application"
+    r"regarding your\s+(.*?)\s+application",
+    r"for applying to the\s+(.*?)\s+role",
+    r"for applying to\s+(.*?)\s+at",
+    r"applied for the\s+(.*?)\s+position",
+    r"position of\s+(.*?)(?:\.|,|\s+at|\s+with)",
+    r"under review for\s+(.*?)(?:\.|\b[A-Z][a-z]+\b|$)",
+    r"application for\s+(.*?)\s+is under review",
+    r"applied for\s+(.*?)\s+at",
 ]
 
 SUBJECT_REGEX_PATTERNS = [
@@ -68,6 +75,9 @@ SUBJECT_REGEX_PATTERNS = [
     r"position:\s+(.*?)(?:$|!|\s+with|\s+at|\s+-)",
     r"thanks for applying to\s+(.*?)(?:$|!|\s+-)",
     r"thank you for applying to\s+(.*?)(?:$|!|\s+-)",
+    r"Application received:\s*(.*)",
+    r"Your application for\s+(.*?)(?:\s+at|\s+with|$)",
+    r"Applying for\s+(.*?)(?:\s+at|\s+with|$)",
 ]
 
 # --- SPECIALIZED PLATFORM OVERRIDES ---

@@ -16,7 +16,12 @@ export async function GET() {
     const rows = db.prepare('SELECT id, application_date, company_name, role_title, status FROM applications').all() as DbRow[];
 
     // 3. Now 'row' is typed as DbRow instead of 'any'
-    const jobs = rows.map((row) => {
+    const jobs = rows
+      .filter((row) => {
+        const company = (row.company_name || '').toLowerCase();
+        return !['stripe', 'vercel'].includes(company);
+      })
+      .map((row) => {
       let mappedStatus = 'applied';
       const rawStatus = (row.status || '').toLowerCase();
 

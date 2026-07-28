@@ -3,9 +3,16 @@ export type JobStatus = 'wishlist' | 'applied' | 'interviewing' | 'offer' | 'rej
 export interface Job {
   id: string;
   company: string;
-  position: string;
-  location?: string;
-  status: JobStatus;
-  appliedDate?: string;
-  description?: string;
+  role?: string;
+  position?: string;
+  status: JobStatus | string;
+  appliedDate?: string | null;
+  date?: string | null;
+  location?: string | null;
+  description?: string | null;
+  salary?: string | null;
+  link?: string | null;
+  rating?: number | null;
+  workMode?: 'Remote' | 'Hybrid' | 'On-site' | string | null;
+  commuteTimeMinutes?: number | null;
 }

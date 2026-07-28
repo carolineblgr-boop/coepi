@@ -13,6 +13,7 @@ import config
 SCOPES = ['https://www.googleapis.com/auth/gmail.readonly']
 
 def get_email_body(payload):
+    """Recursively extract raw body text from the Gmail MIME structure."""
     if 'body' in payload and 'data' in payload['body']:
         raw_data = payload['body']['data']
         return base64.urlsafe_b64decode(raw_data).decode('utf-8', errors='ignore')
@@ -24,8 +25,19 @@ def get_email_body(payload):
                     return base64.urlsafe_b64decode(raw_data).decode('utf-8', errors='ignore')
             elif 'parts' in part:
                 body = get_email_body(part)
-                if body: return body
+                if body: 
+                    return body
     return ""
+
+def clean_extracted_title(title):
+    """Utility to strip leading articles ('the', 'a') and trailing noise from job titles."""
+    if not title:
+        return title
+    # Remove leading articles: "the Senior Frontend Engineer" -> "Senior Frontend Engineer"
+    title = re.sub(r"^(the|a|an)\s+", "", title, flags=re.IGNORECASE)
+    # Remove trailing words: "Senior Frontend Engineer position" -> "Senior Frontend Engineer"
+    title = re.sub(r"\s+(position|role|job)$", "", title, flags=re.IGNORECASE)
+    return title.strip().rstrip('.,;:(-')
 
 def main():
     creds = None
@@ -46,7 +58,6 @@ def main():
     results = service.users().messages().list(userId='me', q=config.ADVANCED_GMAIL_QUERY, maxResults=100).execute()
     messages = results.get('messages', [])
 
-    # PATH ADJUSTMENT: Point output to the data subdirectory
     output_filename = 'data/jobs_database.json'
     all_applications = []
     existing_ids = set()
@@ -57,7 +68,7 @@ def main():
                 all_applications = json.load(json_file)
                 existing_ids = {app['id'] for app in all_applications if 'id' in app}
                 print(f"Loaded {len(all_applications)} historical records from disk.")
-        except Exception as e:
+        except Exception:
             all_applications = []
 
     if not messages:
@@ -73,12 +84,15 @@ def main():
             subject = "No Subject"
             sender = "Unknown Sender"
             for header in headers:
-                if header['name'] == 'Subject': subject = header['value']
-                if header['name'] == 'From': sender = header['value']
+                if header['name'] == 'Subject': 
+                    subject = header['value']
+                if header['name'] == 'From': 
+                    sender = header['value']
             
             subject_lower = subject.lower()
             sender_lower = sender.lower()
 
+            # --- FILTER: Intent & Noise Verification ---
             has_valid_sender = any(keyword in sender_lower for keyword in config.INTENT_SENDER_KEYWORDS)
             has_valid_subject = any(phrase in subject_lower for phrase in config.INTENT_SUBJECT_KEYWORDS)
 
@@ -88,47 +102,77 @@ def main():
             if any(keyword in subject_lower for keyword in config.TRANSACTION_KEYWORDS):
                 continue  
 
+            # --- STEP 1: CLEAN & STRIP HTML FROM EMAIL BODY ---
             body_text = get_email_body(email_data.get('payload', {}))
-            clean_body = body_text.replace('\n', ' ').replace('\r', ' ').replace('\t', ' ').strip()
+            
+            # Remove <style> and <script> tags and content
+            clean_body = re.sub(r'<style.*?>.*?</style>', '', body_text, flags=re.DOTALL | re.IGNORECASE)
+            clean_body = re.sub(r'<script.*?>.*?</script>', '', clean_body, flags=re.DOTALL | re.IGNORECASE)
+            # Remove all HTML tags (<p>, <div>, <a>, etc.)
+            clean_body = re.sub(r'<[^>]+>', ' ', clean_body)
+            # Collapse extra spaces, tabs, and newlines into single spaces
             clean_body = " ".join(clean_body.split())
 
+            # --- STEP 2: EXTRACT JOB TITLE FROM EMAIL BODY (PRIMARY PATTERNS) ---
             extracted_job_title = config.CLEAN_FALLBACK_ROLE
             for pattern in config.BODY_REGEX_PATTERNS:
                 match = re.search(pattern, clean_body, re.IGNORECASE)
                 if match:
-                    extracted_job_title = match.group(1).strip().rstrip('.,;:(-')
+                    extracted_job_title = clean_extracted_title(match.group(1))
                     break 
             
-            if extracted_job_title == "Could not isolate job title automatically.":
+            # --- STEP 3: FALLBACK TO SUBJECT REGEX IF BODY FAILED ---
+            if extracted_job_title == config.CLEAN_FALLBACK_ROLE:
                 for sub_pattern in config.SUBJECT_REGEX_PATTERNS:
                     sub_match = re.search(sub_pattern, subject, re.IGNORECASE)
                     if sub_match:
-                        extracted_job_title = sub_match.group(1).strip().rstrip('.,;:(-')
+                        extracted_job_title = clean_extracted_title(sub_match.group(1))
                         break
-            
-# Clean up company text formatting strings
+
+            # --- STEP 4: GREEDY-CAPTURE & LENGTH SANITY CHECK ---
+            # If regex captured a whole sentence (e.g., >60 chars or >8 words), discard it
+            if len(extracted_job_title) > 60 or len(extracted_job_title.split()) > 8:
+                extracted_job_title = config.CLEAN_FALLBACK_ROLE
+
+            # --- STEP 5: PARSE & CLEANUP COMPANY NAME ---
             company_name = sender.split('<')[0].strip()
             company_name = company_name.replace("Hiring Team", "").replace("Team", "").replace("Hiring", "").replace("Talent Acquisition", "").strip()
 
-            # --- SPECIALIZED PLATFORM INTERCEPTORS ---
+            # SENDER DELIMITER INTERCEPTOR (e.g. "Hostaway / Senior Frontend Engineer")
+            if "/" in company_name:
+                parts = company_name.split("/", 1)
+                company_name = parts[0].strip()
+                if extracted_job_title == config.CLEAN_FALLBACK_ROLE:
+                    extracted_job_title = clean_extracted_title(parts[1])
+
+            # GENERIC COMPANY RECOVERY (e.g., "Target Company", "Proxify Careers", or raw emails)
+            if company_name in ["Target Company", "Proxify Careers", "Careers", "No Reply"] or "@" in company_name or not company_name:
+                comp_match = re.search(r"(?:at|to|with)\s+([A-Z][A-Za-z0-9\s]+)", subject, re.IGNORECASE)
+                if comp_match:
+                    company_name = comp_match.group(1).strip().rstrip('.,;:(-')
+
+            # --- STEP 6: SPECIALIZED PLATFORM INTERCEPTORS ---
             if "workable" in sender_lower:
                 company_match = re.search(config.WORKABLE_COMPANY_PATTERN, subject, re.IGNORECASE)
                 if company_match:
                     company_name = company_match.group(1).strip().rstrip('.,;:(-')
-                if extracted_job_title == config.CLEAN_FALLBACK_ROLE:
-                    extracted_job_title = "Applied Role (Via Workable)"
             
-            # NEW: Greenhouse Identity Swapper
-            elif "greenhouse-mail.io" in sender_lower or "greenhouse" in sender_lower:
-                # If the sender string is just a raw email address, grab the company from the role block
-                if "@" in company_name or not company_name:
-                    company_name = extracted_job_title if extracted_job_title != config.CLEAN_FALLBACK_ROLE else "Target Company"
-                    extracted_job_title = config.CLEAN_FALLBACK_ROLE
+            elif "greenhouse" in sender_lower:
+                if company_name in ["Target Company", "Greenhouse"] or "@" in company_name:
+                    comp_match = re.search(r"(?:at|to|with)\s+([A-Z][A-Za-z0-9\s]+)", subject, re.IGNORECASE)
+                    if comp_match:
+                        company_name = comp_match.group(1).strip()
 
-            is_verified_recruiter = any(k in sender_lower for k in ["hiring", "talent", "careers", "recruitment"])
-            if extracted_job_title == "Could not isolate job title automatically." and not is_verified_recruiter:
+            # TALENT NETWORK OVERRIDE (e.g., Proxify network applications without specific titles)
+            if "proxify" in company_name.lower() and extracted_job_title == config.CLEAN_FALLBACK_ROLE:
+                extracted_job_title = "Network Member / Developer"
+
+            # --- STEP 7: VERIFICATION CHECK ---
+            is_verified_recruiter = any(k in sender_lower for k in ["hiring", "talent", "careers", "recruitment", "workable", "greenhouse"])
+            if extracted_job_title == config.CLEAN_FALLBACK_ROLE and not is_verified_recruiter:
                 continue
 
+            # --- STEP 8: DATE & LIFECYCLE STATUS CALCULATION ---
             raw_date_ms = email_data.get('internalDate', '0')
             date_object = datetime.fromtimestamp(int(raw_date_ms) / 1000.0)
             formatted_date = date_object.strftime('%Y-%m-%d')
@@ -136,10 +180,7 @@ def main():
             current_date = datetime.now()
             days_old = (current_date - date_object).days
 
-            if days_old > config.ACTIVE_TRACKING_WINDOW_DAYS:
-                record_status = "Archived"
-            else:
-                record_status = "Active"
+            record_status = "Archived" if days_old > config.ACTIVE_TRACKING_WINDOW_DAYS else "Active"
 
             application_data = {
                 "id": msg['id'],

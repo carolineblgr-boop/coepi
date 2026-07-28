@@ -7,17 +7,17 @@ export interface JobStatsProps {
 export default function JobStats({ total, interviewing, offers }: JobStatsProps) {
   return (
     <div className="grid grid-cols-3 gap-4">
-      <div className="bg-slate-800 p-4 rounded-xl border border-slate-700/60 text-center">
-        <p className="text-xs text-slate-400 font-medium uppercase tracking-wider">Total Apps</p>
-        <p className="text-2xl font-bold text-slate-100 mt-1">{total}</p>
+      <div className="bg-[#14171d] border border-[#1f232c] p-4 rounded-xl shadow-neumorphic">
+        <p className="text-[10px] font-bold uppercase tracking-wider text-slate-500">Total Applications</p>
+        <p className="text-2xl font-bold tracking-tight text-white">{total}</p>
       </div>
-      <div className="bg-slate-800 p-4 rounded-xl border border-slate-700/60 text-center">
-        <p className="text-xs text-amber-400 font-medium uppercase tracking-wider">Interviewing</p>
-        <p className="text-2xl font-bold text-amber-400 mt-1">{interviewing}</p>
+      <div className="bg-[#14171d] border border-[#1f232c] p-4 rounded-xl shadow-neumorphic">
+        <p className="text-[10px] font-bold uppercase tracking-wider text-slate-500">Interviewing</p>
+        <p className="text-2xl font-bold tracking-tight text-white">{interviewing}</p>
       </div>
-      <div className="bg-slate-800 p-4 rounded-xl border border-slate-700/60 text-center">
-        <p className="text-xs text-emerald-400 font-medium uppercase tracking-wider">Offers</p>
-        <p className="text-2xl font-bold text-emerald-400 mt-1">{offers}</p>
+      <div className="bg-[#14171d] border border-[#1f232c] p-4 rounded-xl shadow-neumorphic">
+        <p className="text-[10px] font-bold uppercase tracking-wider text-slate-500">Offers</p>
+        <p className="text-2xl font-bold tracking-tight text-white">{offers}</p>
       </div>
     </div>
   );
