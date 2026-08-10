@@ -1,0 +1,13 @@
+{
+  "hooks": {
+    "pre-commit": [
+      {
+        "id": "no-secrets",
+        "name": "Check for secrets",
+        "entry": "bash -c 'if grep -r --exclude-dir=.git --exclude-dir=node_modules --exclude-dir=.next --exclude-dir=.vercel \"(GOCSPX|ya29\\.|1//|AUTH_SECRET|NEXTAUTH)\" --include=\"*.json\" --include=\"*.js\" --include=\"*.ts\" --include=\"*.tsx\" --include=\".env*\" .; then echo \"❌ SECURITY ALERT: Potential secrets found in staged files!\"; exit 1; fi'",
+        "language": "system",
+        "stages": ["commit"]
+      }
+    ]
+  }
+}

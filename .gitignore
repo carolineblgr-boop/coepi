@@ -1,6 +1,8 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
-# dependencies
+# ============================================
+# Dependencies
+# ============================================
 /node_modules
 /.pnp
 .pnp.*
@@ -10,44 +12,176 @@
 !.yarn/releases
 !.yarn/versions
 
-# testing
+# ============================================
+# Testing
+# ============================================
 /coverage
 
-# next.js
+# ============================================
+# Next.js Build Artifacts
+# ============================================
 /.next/
 /out/
-
-# production
 /build
 
-# misc
+# ============================================
+# OS & Editor Artifacts
+# ============================================
 .DS_Store
+.AppleDouble
+.LSOverride
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
 
-# Authentication & Secret Files
+# ============================================
+# CRITICAL: Never commit authentication files
+# ============================================
+# OAuth & Authentication Credentials
 credentials*.json
+credentials*.js
+credentials*.yaml
+credentials*.yml
 token*.json
+token*.js
 tokens/
+secrets/
+.secrets/
+
+# ============================================
+# CRITICAL: Environment Variables & Secrets
+# ============================================
+# Development environment files
+.env
+.env.local
+.env.*.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# GitHub Copilot settings (may contain auth)
+.copilot/
+
+# ============================================
+# Private Keys & Certificates
+# ============================================
 *.pem
 *.key
-*.pem
+*.p8
+*.p12
+*.pfx
+*.keystore
+*.jks
+*.crt
+*.cer
+*.der
 
-# debug
+# ============================================
+# Database Files
+# ============================================
+*.db
+*.sqlite
+*.sqlite3
+*.db-shm
+*.db-wal
+jobs_database_local.json
+
+# ============================================
+# Logs
+# ============================================
 npm-debug.log*
+npm-error.log*
 yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
+lerna-debug.log*
+.npm/
+*.log
 
-# env files (CRITICAL: Never commit these)
-.env
-.env.*
+# ============================================
+# Temporary & Cache Files
+# ============================================
+.cache/
+.tmp/
+tmp/
+temp/
+dist/
+.turbo/
+.vercel/
+
+# ============================================
+# IDE & Editor Files (Risk of exposing config)
+# ============================================
+.vscode/settings.json
+.vscode/launch.json
+.vscode/extensions.json
+.vscode/*.code-snippets
+.vscode/c_cpp_properties.json
+.vscode/tasks.json
+
+# ============================================
+# OS-Specific Files
+# ============================================
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+.Spotlight-V100
+.Trashes
+
+# ============================================
+# Python (for scripts directory)
+# ============================================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+*.egg-info/
+.pytest_cache/
+.tox/
+.env/
+.venv/
+pip-log.txt
+pip-delete-this-directory.txt
+
+# ============================================
+# MacOS Specific
+# ============================================
+._*
+.localized
+.AppleDB
+.AppleDouble
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+
+# ============================================
+# Audit & Incident Documentation (temporary)
+# ============================================
+SECURITY_AUDIT_REPORT.md
+IMMEDIATE_ACTION_REQUIRED.md
+AUDIT_SUMMARY.md
+AUDIT_VISUAL_SUMMARY.md
+remediate-security.sh
+*_AUDIT_*.md
+INCIDENT_*.md
+
+# ============================================
+# Allow whitelisted files
+# ============================================
 !.env.example
-.env*.local
-.env.development
-.env.test
-.env.production
-
-# vercel
-.vercel
+!.env.development
+!.env.production
+!.prettierrc
+!.eslintrc*
+!.gitignore
+!SECURITY.md
 
 # typescript
 *.tsbuildinfo
