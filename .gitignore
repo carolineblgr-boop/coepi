@@ -177,8 +177,6 @@ INCIDENT_*.md
 # Allow whitelisted files
 # ============================================
 !.env.example
-!.env.development
-!.env.production
 !.prettierrc
 !.eslintrc*
 !.gitignore
