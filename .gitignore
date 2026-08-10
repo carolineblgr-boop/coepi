@@ -81,7 +81,7 @@ secrets/
 *.der
 
 # ============================================
-# Database Files
+# Database Files & Personal Data
 # ============================================
 *.db
 *.sqlite
@@ -89,6 +89,7 @@ secrets/
 *.db-shm
 *.db-wal
 jobs_database_local.json
+data/jobs_database.json
 
 # ============================================
 # Logs
