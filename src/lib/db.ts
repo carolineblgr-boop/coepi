@@ -12,3 +12,37 @@ if (!fs.existsSync(dbPath)) {
 }
 
 export const db = new Database(dbPath);
+
+function ensureSchema() {
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS applications (
+      id TEXT PRIMARY KEY,
+      company_name TEXT NOT NULL,
+      role_title TEXT NOT NULL,
+      status TEXT DEFAULT 'applied',
+      application_date TEXT
+    );
+  `);
+
+  const columns = db
+    .prepare('PRAGMA table_info(applications)')
+    .all() as Array<{ name: string }>;
+  const existingColumns = new Set(columns.map((column) => column.name));
+
+  const migrations: Array<[string, string]> = [
+    ['salary', 'TEXT'],
+    ['rating', 'INTEGER'],
+    ['work_mode', 'TEXT'],
+    ['url', 'TEXT'],
+    ['description', 'TEXT'],
+  ];
+
+  for (const [columnName, columnType] of migrations) {
+    if (!existingColumns.has(columnName)) {
+      db.exec(`ALTER TABLE applications ADD COLUMN ${columnName} ${columnType}`);
+      existingColumns.add(columnName);
+    }
+  }
+}
+
+ensureSchema();

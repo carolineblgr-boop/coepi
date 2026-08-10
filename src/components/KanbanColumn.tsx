@@ -5,11 +5,14 @@ import JobCard from './JobCard';
 import AddJobModal from './AddJobModal';
 import { Job } from '@/types/job';
 
+// interface in react is used to define the shape of props that a component expects.
+// It helps with type-checking and ensures that the component receives the correct data types.
+// ie, in vue, we use props: { type: String, required: true } to define the expected props for a component.
 interface ColumnProps {
   columnId: string;
   title: string;
   cards?: Job[];
-  jobs?: Job[]; // Backward-compatibility fallback
+  jobs?: Job[]; // Backward-compatibility fallback, meaning either cards or jobs can be passed in, but not both.
   onDragStart?: (e: React.DragEvent, cardId: string, sourceColId: string) => void;
   onDrop?: (e: React.DragEvent, targetColId: string) => void;
   onDeleteCard?: (cardId: string, colId: string) => void;
@@ -17,6 +20,8 @@ interface ColumnProps {
   onAddClick?: (colId: string) => void;
 }
 
+// memo means that React will only re-render this component if its props change,
+// which is useful for performance in a Kanban board with many cards.
 export const KanbanColumn = memo(function KanbanColumn({
   columnId,
   title,
@@ -30,8 +35,14 @@ export const KanbanColumn = memo(function KanbanColumn({
 }: ColumnProps) {
   const cardList = cards || jobs || [];
 
+  // UseState means that the component will re-render when the state changes.
+  // In this case, we are tracking the drag state of the column.
   const [dragCounter, setDragCounter] = useState(0);
-  const [readingCard, setReadingCard] = useState<Job | null>(null);
+  // Use useState<> means that the component will re-render when the state changes. In this case, we are tracking the card that is being read in a modal.
+  // We use useState<Job | null> because the card can be null when no card is being read.
+  // <> means that we are using a generic type, which allows us to specify the type of the state variable.
+  // in Vue, we use data() { return { readingCard: null } } to define the state of the component.
+  const [readingCard, setReadingCard] = useState<Job | null>(null); 
 
   const handleDragEnter = (e: React.DragEvent) => {
     e.preventDefault();
@@ -39,7 +50,10 @@ export const KanbanColumn = memo(function KanbanColumn({
   };
 
   const handleDragLeave = (e: React.DragEvent) => {
-    setDragCounter((prev) => prev - 1);
+    // Decrement the drag counter when the dragged item leaves the column area
+    // We do this because the onDragLeave event can fire multiple times when dragging over child elements,
+    // so we need to keep track of how many times the dragged item has entered and left the column.
+    setDragCounter((prev) => prev - 1); 
   };
 
   const handleDragOver = (e: React.DragEvent) => {
@@ -56,7 +70,7 @@ export const KanbanColumn = memo(function KanbanColumn({
   const isOver = dragCounter > 0;
 
   return (
-    <>
+    <div>
       <div
         onDragOver={handleDragOver}
         onDragEnter={handleDragEnter}
@@ -154,7 +168,7 @@ export const KanbanColumn = memo(function KanbanColumn({
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 });
 

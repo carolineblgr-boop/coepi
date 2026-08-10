@@ -31,10 +31,48 @@ export default function AddJobModal({ trigger }: AddJobModalProps) {
     },
   });
 
-  const onSubmit = (data: JobApplicationFormValues) => {
-    console.log('Valid submitted data:', data);
-    reset();
-    setOpen(false);
+  const onSubmit = async (data: JobApplicationFormValues) => {
+    try {
+      const response = await fetch('/api/jobs', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          company: data.companyName,
+          position: data.jobTitle,
+          status: (() => {
+            switch (data.status) {
+              case 'APPLIED':
+                return 'applied';
+              case 'INTERVIEWING':
+                return 'interviewing';
+              case 'OFFER':
+                return 'offer';
+              case 'REJECTED':
+                return 'rejected';
+              default:
+                return 'wishlist';
+            }
+          })(),
+          salary: data.salary || null,
+          description: data.notes || null,
+          appliedDate: new Date().toISOString(),
+          rating: null,
+          workMode: null,
+          url: null,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || 'Failed to save job application');
+      }
+
+      reset();
+      setOpen(false);
+      window.location.reload();
+    } catch (error) {
+      console.error('Failed to add job application:', error);
+    }
   };
 
   return (

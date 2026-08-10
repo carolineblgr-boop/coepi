@@ -3,6 +3,16 @@
 import React, { memo } from 'react';
 import { Job } from '@/types/job';
 
+// In Vue, interface JobCardProps would look like this:
+// props: {
+//   card: { type: Object, required: true },
+//   columnId: { type: String, required: true },
+//   onDragStart: { type: Function, required: false },
+//   onDeleteCard: { type: Function, required: false },
+//   onEditCard: { type: Function, required: false },
+//   onReadDescription: { type: Function, required: false },
+// } 
+// notice how ? is the equivalent of required: false in Vue, meaning that the prop is optional.
 export interface JobCardProps {
   card: Job;
   columnId: string;
@@ -12,12 +22,14 @@ export interface JobCardProps {
   onReadDescription?: (card: Job) => void;
 }
 
-/** Dynamic Dwell Time & Color Calculator */
+// Dynamic Dwell Time & Color Calculator
+// This function calculates how many days have passed since the application was submitted
+// and returns a color class based on the number of days.
 function getDwellStats(appliedDate?: string | null) {
   if (!appliedDate) return null;
 
   const start = new Date(appliedDate);
-  if (isNaN(start.getTime())) return null;
+  if (isNaN(start.getTime())) return null; // If the date is invalid, return null
 
   const now = new Date();
   const diffTime = Math.abs(now.getTime() - start.getTime());
@@ -38,6 +50,21 @@ function getDwellStats(appliedDate?: string | null) {
 }
 
 /** Reusable Badge for Work Mode */
+// This component displays the work mode (e.g., Remote, Hybrid, On-site) and optionally the commute time in minutes.
+// If the mode is not provided, it returns null and does not render anything.
+// In Vue, we would use a computed property or a method to achieve the same effect.
+// It would look like this:
+// <template>
+//   <span v-if="mode" class="badge">{{ mode }}<span v-if="commute"> ({{ commute }}m)</span></span>
+// </template>
+// <script>
+// export default {
+//   props: {
+//     mode: { type: String, required: false },
+//     commute: { type: Number, required: false },
+//   },
+// };
+// </script>
 function ModeBadge({ mode, commute }: { mode?: string | null; commute?: number | null }) {
   if (!mode) return null;
   return (
@@ -58,6 +85,11 @@ function StarRating({ rating }: { rating?: number | null }) {
   );
 }
 
+// The JobCard component is memoized using React.memo to prevent unnecessary re-renders when the props haven't changed.
+// Memoization is a performance optimization technique that caches the result of a function call based on its inputs.
+// In Vue, we would use the v-once directive to achieve a similar effect, but it is not as flexible as React.memo.
+// Example: if the card's props haven't changed, React.memo will skip re-rendering the component,
+// improving performance in large lists of cards.
 export const JobCard = memo(function JobCard({
   card,
   columnId,
@@ -71,6 +103,8 @@ export const JobCard = memo(function JobCard({
   const displayDate = card.appliedDate || card.date;
 
   // Compute dynamic dwell calculation
+  // The getDwellStats function calculates how many days have passed since the application was submitted
+  // and returns a color class based on the number of days.
   const dwell = getDwellStats(displayDate);
 
   return (
@@ -89,7 +123,7 @@ export const JobCard = memo(function JobCard({
             <button
               type="button"
               onClick={() => onEditCard(card.id, columnId)}
-              className="hover:text-slate-300 text-xs cursor-pointer"
+              className="text-white hover:text-cyan-300 text-xs cursor-pointer p-1"
               title="Edit application profile"
             >
               ✎
@@ -99,7 +133,7 @@ export const JobCard = memo(function JobCard({
             <button
               type="button"
               onClick={() => onDeleteCard(card.id, columnId)}
-              className="hover:text-rose-400 text-xs cursor-pointer"
+              className="text-white hover:text-rose-400 text-xs cursor-pointer"
               title="Delete card"
             >
               ✕

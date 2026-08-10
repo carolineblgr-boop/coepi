@@ -69,7 +69,7 @@ export default function JobModal({
         setSalary(targetCard.salary || '');
         setLink(targetCard.link || '');
         setRating(targetCard.rating || 0);
-        setWorkMode(targetCard.workMode || 'Remote');
+        setWorkMode((targetCard.workMode as 'Remote' | 'Hybrid' | 'On-site') || 'Remote');
         setCommuteTimeMinutes(targetCard.commuteTimeMinutes?.toString() || '');
         setDescription(targetCard.description || '');
         setAppliedDate(targetCard.appliedDate || targetCard.date || new Date().toISOString().split('T')[0]);

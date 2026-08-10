@@ -12,6 +12,7 @@ export interface Job {
   description?: string | null;
   salary?: string | null;
   link?: string | null;
+  url?: string | null;
   rating?: number | null;
   workMode?: 'Remote' | 'Hybrid' | 'On-site' | string | null;
   commuteTimeMinutes?: number | null;
